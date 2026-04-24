@@ -22,4 +22,6 @@ jobs:
         env:
           SDL_VIDEODRIVER: dummy
           SDL_AUDIODRIVER: dummy
-        run: python check_versions.py
+        run: |
+          pwd
+          python check_versions.py
