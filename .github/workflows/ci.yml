@@ -26,13 +26,12 @@ jobs:
         run: |
           for f in snake_v0.py snake_v1.py snake_v2.py snake_v3.py snake_v4.py snake_v5.py snake_v6.py; do
             echo "Checking $f..."
-            python -c "import ast; ast.parse(open('$f').read()); print('  syntax OK')"
+            python -c "import ast; ast.parse(open('${f}').read()); print('  syntax OK')"
             python -c "
-            import os, sys
+            import os, importlib.util
             os.environ['SDL_VIDEODRIVER'] = 'dummy'
             os.environ['SDL_AUDIODRIVER'] = 'dummy'
-            import importlib.util
-            spec = importlib.util.spec_from_file_location('mod', '$f')
+            spec = importlib.util.spec_from_file_location('mod', '${f}')
             mod  = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
             print('  imports OK')
