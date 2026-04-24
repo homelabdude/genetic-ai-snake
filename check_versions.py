@@ -21,7 +21,7 @@ VERSIONS = [
 failed = []
 
 for filename in VERSIONS:
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", filename)
+    path = filename
     print(f"Checking {filename}...")
 
     # Syntax check
