@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Check all versions import cleanly
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: |
+          for f in snake_v0.py snake_v1.py snake_v2.py snake_v3.py snake_v4.py snake_v5.py snake_v6.py; do
+            echo "Checking $f..."
+            python -c "import ast; ast.parse(open('$f').read()); print('  syntax OK')"
+            python -c "
+            import os, sys
+            os.environ['SDL_VIDEODRIVER'] = 'dummy'
+            os.environ['SDL_AUDIODRIVER'] = 'dummy'
+            import importlib.util
+            spec = importlib.util.spec_from_file_location('mod', '$f')
+            mod  = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            print('  imports OK')
+            "
+          done
